@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="com.lucian.imagebrowser.LayoutFlag"/>
+        <import type="com.lucian.imagebrowser.QueryState"/>
+
+        <variable
+            name="editorActionListener"
+            type="android.widget.TextView.OnEditorActionListener"/>
+
+        <variable
+            name="focusChangeListener"
+            type="android.view.View.OnFocusChangeListener"/>
+
+        <variable
+            name="imageAdapter"
+            type="androidx.recyclerview.widget.RecyclerView.Adapter"/>
+
+        <variable
+            name="imageLinearLayoutManager"
+            type="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+        <variable
+            name="imageGridLayoutManager"
+            type="androidx.recyclerview.widget.GridLayoutManager"/>
+
+        <variable
+            name="searchHistoryAdapter"
+            type="androidx.recyclerview.widget.RecyclerView.Adapter"/>
+
+        <variable
+            name="searchHistoryLayoutManager"
+            type="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+        <variable
+            name="viewModel"
+            type="com.lucian.imagebrowser.ImageViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/query_progress_bar"
+            android:layout_width="@dimen/primary_view_size"
+            android:layout_height="@dimen/primary_view_size"
+            android:visibility="@{viewModel.queryState == QueryState.RUNNING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="?android:progressBarStyleSmall"/>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/back_icon"
+            android:layout_width="@dimen/secondary_view_size"
+            android:layout_height="@dimen/secondary_view_size"
+            android:layout_marginStart="?android:listPreferredItemPaddingStart"
+            android:layout_marginEnd="?android:listPreferredItemPaddingEnd"
+            android:visibility="@{viewModel.isFocusEditor() ? View.VISIBLE : View.GONE}"
+            android:background="@drawable/back_icon"
+            android:onClick="@{() -> viewModel.cancelFocusEditor()}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/keywords_editor"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/keywords_editor"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_view_height"
+            android:layout_marginStart="?android:listPreferredItemPaddingStart"
+            android:layout_marginEnd="?android:listPreferredItemPaddingEnd"
+            android:text="@{viewModel.keywords}"
+            android:textSize="@dimen/primary_text_size"
+            android:maxLines="1"
+            android:maxLength="50"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:hint="@string/keywords_hint"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/back_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:editorActionListener="@{editorActionListener}"
+            app:focusChangeListener="@{focusChangeListener}"
+            app:isFocused="@{viewModel.isFocusEditor()}"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/image_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="@{viewModel.isFocusEditor() ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/keywords_editor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:itemPosition="@{viewModel.itemPosition}"
+            app:adapter="@{imageAdapter}"
+            app:layoutManager="@{viewModel.layoutFlag == LayoutFlag.LIST ? imageLinearLayoutManager : imageGridLayoutManager}"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_history_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="@{viewModel.isFocusEditor() ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@id/keywords_editor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:adapter="@{searchHistoryAdapter}"
+            app:layoutManager="@{searchHistoryLayoutManager}"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/swap_layout_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="?android:listPreferredItemPaddingStart"
+            android:visibility="@{(viewModel.queryState == QueryState.SUCCESS &amp;&amp; !viewModel.isFocusEditor()) ? View.VISIBLE : View.INVISIBLE}"
+            android:src="@{viewModel.layoutFlag}"
+            android:contentDescription="@string/floating_button_description"
+            android:onClick="onSwapLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

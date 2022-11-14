@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="common_view_height">80dp</dimen>
+    <dimen name="divider_height">1px</dimen>
+    <dimen name="primary_view_size">50dp</dimen>
+    <dimen name="secondary_view_size">25dp</dimen>
+    <dimen name="primary_text_size">18sp</dimen>
+    <dimen name="secondary_text_size">16sp</dimen>
+</resources>

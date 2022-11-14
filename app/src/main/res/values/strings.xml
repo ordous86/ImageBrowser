@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ImageBrowser</string>
+    <string name="floating_button_description">Button to swap between list and grid layout.</string>
+    <string name="keywords_hint">Enter keywords to search photos.</string>
+    <string name="toast_no_keywords">No keywords. Please enter and try again.</string>
+    <string name="toast_no_result">No result. Please use other keywords and try again.</string>
+    <string name="toast_network_error">Network error. Please try later.</string>
+</resources>
